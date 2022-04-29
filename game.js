@@ -7,6 +7,8 @@ var btnClrs = ["red", "blue", "green", "yellow", "violet", "lime", "cyan", "fuch
 var level = 0;
 var started = false;
 
+var maxLevel = 0;
+
 function nextSeq() {
     
     var randNum = Math.floor(Math.random() * 9);
@@ -52,19 +54,19 @@ function playSound(name) {
     audio.play();
 }
 
-function animatePress(currClr) {
-    $(currClr).addClass("pressed");
-
-    setTimeout(function() {
-        $(currClr).removeClass("pressed");
-    }, 500);
-}
-
 function checkAnswer(currentLevel) {
     if(userClickedPattern[currentLevel] == gamePattern[currentLevel]){
         return true;
     }
     else{
+        var lastmax = maxLevel;
+        if(level-1 > maxLevel){
+            maxLevel = level-1;
+            console.log(maxLevel);
+        }else{
+            console.log(maxLevel);
+        }
+        
         playSound("wrong");
 
         $("body").addClass("game-over");
@@ -72,7 +74,10 @@ function checkAnswer(currentLevel) {
             $("body").removeClass("game-over");
         }, 200);
 
-        $("#level-title").text("Game Over, Press Any Key to Restart");
+        if(maxLevel > lastmax)
+            $("#level-title").text("Game Over, Your New Best Score is "+maxLevel+" ! Press Any Key to Restart");
+        else
+            $("#level-title").text("Game Over, Your Score is! "+level+" ! Press Any Key to Restart");
 
         startOver();
         return false;
